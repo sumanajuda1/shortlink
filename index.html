@@ -1,74 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+  <title>Simple Shortlink Generator</title>
   <meta charset="UTF-8">
-  <title>Simple Shortlink</title>
   <style>
     body {
-      background: #f4f4f4;
+      font-family: sans-serif;
+      background: #f2f2f2;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
-      font-family: Arial, sans-serif;
+      margin: 0;
     }
-    .container {
-      background: #fff;
-      padding: 30px;
+
+    .box {
+      background: white;
+      padding: 40px;
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       width: 400px;
+      text-align: center;
     }
+
     input {
       width: 100%;
       padding: 10px;
       margin: 15px 0;
       font-size: 16px;
     }
+
     button {
       background: #007bff;
-      color: #fff;
-      padding: 10px 25px;
+      color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 16px;
+      padding: 10px 15px;
       cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
     }
-    #result a {
-      color: #007bff;
+
+    #result {
+      margin-top: 15px;
+    }
+
+    #shortlink {
+      font-weight: bold;
+      color: green;
       word-break: break-all;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>🔗 Simple Shortlink</h2>
-    <input type="text" id="longUrl" placeholder="Enter your long URL">
-    <br>
-    <button onclick="shorten()">Shorten URL</button>
-    <p id="result"></p>
+  <div class="box">
+    <h2>🔗 Simple Shortlink Generator</h2>
+    <input type="text" id="longUrl" placeholder="Enter long URL">
+    <button onclick="generateShortlink()">Shorten URL</button>
+    <div id="result"></div>
   </div>
 
   <script>
-    async function shorten() {
-      const longUrl = document.getElementById("longUrl").value.trim();
-      if (!longUrl) return alert("Please enter a valid URL!");
+    function generateShortlink() {
+      const longUrl = document.getElementById('longUrl').value.trim();
+      if (!longUrl) {
+        alert('Masukkan URL terlebih dahulu!');
+        return;
+      }
 
       const key = Math.random().toString(36).substring(2, 8);
-      const res = await fetch('shortlinks.json');
-      const data = await res.json();
-      data[key] = longUrl;
+      const resultBox = document.getElementById('result');
+      const baseUrl = window.location.origin;
 
-      console.log("Paste the following into shortlinks.json:");
-      console.log(JSON.stringify(data, null, 2));
-
-      document.getElementById("result").innerHTML = `
-        ✅ Your shortlink: 
-        <a href="redirect.html?to=${key}" target="_blank">
-          redirect.html?to=${key}
-        </a><br>
-        <small>⚠️ Jangan lupa update file <code>shortlinks.json</code> di GitHub!</small>
+      resultBox.innerHTML = `
+        Shortlink generated:<br>
+        <span id="shortlink">${baseUrl}/shortlinks/${key}</span><br><br>
+        Mapping:<br>
+        <code>"${key}": "${longUrl}"</code><br>
+        <small>📋 Salin ini ke file JSON atau spreadsheet kamu.</small>
       `;
     }
   </script>
