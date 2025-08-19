@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Shortlink</title>
+  <style>
+    body {
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 400px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 15px 0;
+      font-size: 16px;
+    }
+    button {
+      background: #007bff;
+      color: #fff;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #result a {
+      color: #007bff;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔗 Simple Shortlink</h2>
+    <input type="text" id="longUrl" placeholder="Enter your long URL">
+    <br>
+    <button onclick="shorten()">Shorten URL</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    async function shorten() {
+      const longUrl = document.getElementById("longUrl").value.trim();
+      if (!longUrl) return alert("Please enter a valid URL!");
+
+      const key = Math.random().toString(36).substring(2, 8);
+      const res = await fetch('shortlinks.json');
+      const data = await res.json();
+      data[key] = longUrl;
+
+      console.log("Paste the following into shortlinks.json:");
+      console.log(JSON.stringify(data, null, 2));
+
+      document.getElementById("result").innerHTML = `
+        ✅ Your shortlink: 
+        <a href="redirect.html?to=${key}" target="_blank">
+          redirect.html?to=${key}
+        </a><br>
+        <small>⚠️ Jangan lupa update file <code>shortlinks.json</code> di GitHub!</small>
+      `;
+    }
+  </script>
+</body>
+</html>
